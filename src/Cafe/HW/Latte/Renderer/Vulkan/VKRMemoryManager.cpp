@@ -214,9 +214,9 @@ void VKRSynchronizedHeapAllocator::FlushReservation(AllocatorReservation* upload
 	if (m_chunkedHeap.RequiresFlush(uploadReservation->bufferIndex))
 	{
 		// Align to nonCoherentAtomSize - critical for ARM64/Apple Silicon cache coherency
-		VkDeviceSize atomSize = m_vkr->GetNonCoherentAtomSize();
-		VkDeviceSize alignedOffset = (uploadReservation->memOffset / atomSize) * atomSize;
-		VkDeviceSize alignedEnd = ((uploadReservation->memOffset + uploadReservation->memSize + atomSize - 1) / atomSize) * atomSize;
+		VkDeviceSize atomSize = VulkanRenderer::GetInstance()->GetNonCoherentAtomSize();
+		VkDeviceSize alignedOffset = (uploadReservation->bufferOffset / atomSize) * atomSize;
+		VkDeviceSize alignedEnd = ((uploadReservation->bufferOffset + uploadReservation->size + atomSize - 1) / atomSize) * atomSize;
 		VkDeviceSize alignedSize = alignedEnd - alignedOffset;
 
 		VkMappedMemoryRange flushedRange{};
