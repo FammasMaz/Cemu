@@ -35,14 +35,14 @@ jobs:
             cat response.json
             exit 1
           fi
-          
+
           # Extract and sort tags
           ALL_TAGS=$(jq -r '.[].tag_name' response.json | grep -E '^v[0-9]+\.[0-9]+(-[0-9]+)?$' | sed 's/-.*//' | sort -V | tail -n 1)
 
-          # Exit if no tags were found
+          # If no tags were found, start with v2.0 (default for fork)
           if [ -z "$ALL_TAGS" ]; then
-            echo "No valid tags found."
-            exit 1
+            echo "No valid tags found. Starting with v2.0"
+            ALL_TAGS="v2.0"
           fi
 
           echo "::set-output name=tag::$ALL_TAGS"
