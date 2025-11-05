@@ -119,7 +119,7 @@ bool CemuUpdateWindow::QueryUpdateInfo(std::string& downloadUrlOut, std::string&
 #else
 #error Name for current platform is missing
 #endif
-#if defined(__aarch64__)
+#if defined(ARCH_ARM64)
 	urlStr.append("_aarch64");
 #elif defined(ARCH_X86_64)
 	urlStr.append("_x86_64");

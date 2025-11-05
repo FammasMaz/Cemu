@@ -30,6 +30,10 @@
 #define ARCH_X86_64
 #endif
 
+#if defined(__aarch64__) || defined(_M_ARM64) || defined(__arm64__)
+#define ARCH_ARM64
+#endif
+
 // c includes
 #include <cstdint>
 #include <cstdlib>
@@ -353,7 +357,7 @@ FORCE_INLINE int BSF(uint32 v) // returns index of first bit set, counting from 
 }
 
 // On aarch64 we handle some of the x86 intrinsics by implementing them as wrappers
-#if defined(__aarch64__)
+#if defined(ARCH_ARM64)
 
 inline void _mm_pause()
 {

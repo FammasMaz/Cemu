@@ -6,7 +6,7 @@
 #include "IMLRegisterAllocatorRanges.h"
 
 #include "../BackendX64/BackendX64.h"
-#ifdef __aarch64__
+#ifdef ARCH_ARM64
 #include "../BackendAArch64/BackendAArch64.h"
 #endif
 
