@@ -146,11 +146,7 @@ jobs:
           
       - name: Create release from macos-bin
         run: |
-          cd cemu-macos
-          for bin_dir in cemu-bin-macos-*; do
-            arch="${bin_dir##cemu-bin-macos-}"
-            cp $bin_dir/Cemu.dmg ../upload/cemu-${{ env.CEMU_VERSION }}-macos-$arch.dmg
-          done
+          cp cemu-macos/cemu-bin-macos-arm64/Cemu.dmg upload/cemu-${{ env.CEMU_VERSION }}-macos-arm64.dmg
 
       - name: Create release
         run: |
