@@ -58,6 +58,11 @@ const std::vector<const char*> kRequiredDeviceExtensions =
 	VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME
 }; // Intel doesnt support VK_EXT_DEPTH_RANGE_UNRESTRICTED_EXTENSION_NAME
 
+const std::vector<const char*> kMacOSRequiredDeviceExtensions =
+{
+	"VK_KHR_portability_subset" // Required for MoltenVK on macOS
+};
+
 VKAPI_ATTR VkBool32 VKAPI_CALL DebugUtilsCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageTypes, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
 {
 #ifdef CEMU_DEBUG_ASSERT
@@ -379,6 +384,10 @@ VulkanRenderer::VulkanRenderer()
 	create_info.enabledExtensionCount = enabledInstanceExtensions.size();
 	create_info.ppEnabledLayerNames = m_layerNames.data();
 	create_info.enabledLayerCount = m_layerNames.size();
+	#if BOOST_OS_MACOS
+	// Required for MoltenVK to enumerate portability devices
+	create_info.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+	#endif
 
 	err = vkCreateInstance(&create_info, nullptr, &m_instance);
 
@@ -1317,6 +1326,9 @@ std::vector<const char*> VulkanRenderer::CheckInstanceExtensionSupport(FeatureCo
 	#endif
 	#elif BOOST_OS_MACOS
 	requiredInstanceExtensions.emplace_back(VK_EXT_METAL_SURFACE_EXTENSION_NAME);
+	// Required for MoltenVK portability
+	requiredInstanceExtensions.emplace_back("VK_KHR_portability_enumeration");
+	requiredInstanceExtensions.emplace_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 	#endif
 	if (cemuLog_isLoggingEnabled(LogType::VulkanValidation))
 		requiredInstanceExtensions.emplace_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
